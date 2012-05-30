@@ -18,10 +18,14 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
         <script>
+
             $(document).ready(function () {
+                var name = prompt("Please enter your name","Twilight Sparkle");
                 var bridge = new Bridge({apiKey:'cb0ec2c9'});
                 var channel = null
-                var name = prompt("Please enter your name","Twilight Sparkle");
+
+                var myName = name;
+                console.log(myName)
 
                 bridge.getService('connect', function (connect) {
                     connect.connect(name, function (obj) {
@@ -38,7 +42,7 @@
                 });
 
                 var chatObject = {
-                    message : function (sender, message) {
+                    message : function (channel, sender, message) {
                         var msgObj = {
                             name: sender,
                             content: message
@@ -55,15 +59,22 @@
                         console.log("Channel obj");
                         console.log(channel);
                         console.log("Channel name: "+channelName);
-                        channel.message(name,$("#message").val());
+                        channel.message(channelName, name,$("#message").val(), true);
                     });
                 });
 
                 var appendMessage = function (msg) {
-                    var name = msg.name;
+                    console.log(myName)
+                    console.log("Appending message");
+                    var name = msg.name
                     var content = msg.content;
-                    $("#messages").append(name+": "+content+"<br>");
-                }
+
+                    if (name === myName) {
+                        $("#messages").append(name+": "+content+"<br>");
+                    } else {
+                        $("#messages").append("Suspect"+": "+content+"<br>");
+                    }
+                }    
             });
             console.log("woot");
     </script>
