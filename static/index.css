@@ -1,3 +1,33 @@
 body {
 	padding-top: 60px;
+	background: #1A2B2B;
+	color: #FFFFFF;
+}
+
+h2 {
+	color: #800909;
+}
+
+.btn {
+	background: #800909;
+}
+
+.btn:hover {
+	background: #332222;
+}
+
+#guessRobot {
+	background: #4D1A1A;
+}
+
+#guessRobot:hover {
+	background: #332222;
+}
+
+#guessHuman {
+	background: #4D1A1A;
+}
+
+#guessHuman:hover {
+	background: #332222;
 }

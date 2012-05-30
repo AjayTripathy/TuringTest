@@ -30,6 +30,7 @@
 
                 bridge.getService('connect', function (connect) {
                     connect.connect(name, function (obj) {
+                        console.log("CONNECTING");
                         if (obj.type === "joined") {
                             console.log("joined a room: "+obj.channel);
                         } else if (obj.type === "created") {
@@ -99,6 +100,7 @@
                         console.log(channel);
                         console.log("Channel name: "+channelName);
                         channel.message(channelName, name,$("#message").val(), true);
+                        $("#message").val("");
                     });
                 });
 
@@ -112,7 +114,13 @@
                     bridge.getService('connect', function (connect) {
                         connect.guessRobot(false, channel);
                     });
-                })
+                });
+
+                $(document).keydown(function (e) {
+                    if (e.which === 13 && document.activeElement.id === "message") {
+                        $("#submitmessage").click();
+                    }
+                });
 
                 var appendMessage = function (msg) {
                     console.log(myName)
@@ -138,15 +146,17 @@
             <p>
                 <strong>Message</strong>
                 <input type="text" id="message"></input>
-                <br>
                 <button class="btn btn-primary" id="submitmessage">SUBMIT</button>
             </p>
             <p>
                 <button class="btn btn-primary" id="guessRobot">ROBOT</button>
                 <button class="btn btn-primary" id="guessHuman">HUMAN</button>
             </p>
+            <h2>Message Log</h2>
             <hr>
-            <div id="messages"></div>
+            <div id="messages">
+                
+            </div>
             <hr>
             <footer>
                 <p>&copy; 2012</p>
