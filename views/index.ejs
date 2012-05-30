@@ -1,0 +1,52 @@
+<html>
+    <head>
+        <title>ajay is the worst</title>
+        <script src="http://www.flotype.com/js/bridge.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                var bridge = new Bridge({apiKey:'cb0ec2c9'});
+                var channel = null
+
+                bridge.getService('connect', function (connect) {
+                    connect.connect('ajay', function (obj) {
+                        if (obj.type === "joined") {
+                            console.log("joined a room: "+obj.channel);
+                        } else if (obj.type === "created") {
+                            console.log('created a room: '+obj.channel);
+                        }
+                        channel = obj.channel;
+                        bridge.joinChannel(channel,chatObject, function (channel, channelName) {
+                            console.log("Joined channel: ",channelName);
+                        });
+                    });
+                });
+
+                var chatObject = {
+                    message : function (sender, message) {
+                        console.log(sender, ":", message);
+                    }
+                }
+
+                bridge.connect();
+
+                $("#submitmessage").click(function () {
+                    bridge.getChannel(channel, function (channel, channelName) {
+                        console.log("Channel obj");
+                        console.log(channel);
+                        console.log("Channel name: "+channelName);
+                        channel.message('Ajay',$("#message").val());
+                    })
+                });
+            });
+            console.log("woot");
+    </script>
+
+  </head>
+
+  <body>
+    <input id="message"></input>
+    <button id="submitmessage">SUBMIT</button>
+  </body>
+</html>
