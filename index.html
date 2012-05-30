@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <title>ajay is the worst</title>
+    <script src="http://www.flotype.com/js/bridge.min.js"></script>
+
+    <script>
+      var bridge = new Bridge({apiKey:'cb0ec2c9'});
+
+      bridge.getService('connect', function (connect) {
+          connect.connect('ajay', function (obj) {
+              if (obj === "joined") {
+                console.log("joined a room");
+              } else if (obj === "created") {
+                console.log('created a room');
+              }
+          });
+      });
+      bridge.connect();
+    </script>
+
+  </head>
+
+  <body>
+    Test
+  </body>
+</html>
