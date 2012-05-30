@@ -23,6 +23,7 @@
                 var name = prompt("Please enter your name","Twilight Sparkle");
                 var bridge = new Bridge({apiKey:'cb0ec2c9'});
                 var channel = null
+                var role = null
 
                 var myName = name;
                 console.log(myName)
@@ -34,12 +35,29 @@
                         } else if (obj.type === "created") {
                             console.log('created a room: '+obj.channel);
                         }
+                        if (obj.role === "guesser") {
+                            role = "guesser";
+                        } else if (obj.role === "tricker") {
+                            role = "tricker";
+                            $("#messages").append("<strong>The game is afoot!</strong><br>");
+                        }
+                        displayRules();
                         channel = obj.channel;
                         bridge.joinChannel(channel,chatObject, function (channel, channelName) {
                             console.log("Joined channel: ",channelName);
                         });
                     });
                 });
+
+                var displayRules = function () {
+                    if (role === "guesser") {
+                        $("#rulesDiv").text("Your role is to guess whether or not the suspect is a ROBOT or a HUMAN.");
+                    } else if (role === "tricker") {
+                        $("#rulesDiv").text("Your role is to trick your opponent into thinking you are a ROBOT.");
+                        $("#guessRobot").css("display","none");
+                        $("#guessHuman").css("display","none");
+                    }
+                }
 
                 var chatObject = {
                     message : function (channel, sender, message) {
@@ -49,6 +67,27 @@
                         }
                         console.log(sender, ":", message);
                         appendMessage(msgObj);
+                    },
+
+                    startGame : function () {
+                        $("#messages").append("<strong>The game is afoot!</strong><br>");
+                    },
+
+                    endGame : function (guessed) {
+                        var guess = guessed.guess;
+                        if (role === "guesser") {
+                            if (guess) {
+                                alert("You guessed correctly!");
+                            } else {
+                                alert("You guessed wrong :(");
+                            }
+                        } else if (role === "tricker") {
+                            if (guess) {
+                                alert("You were found out! :(");
+                            } else {
+                                alert("You fooled your opponent!");
+                            }
+                        }
                     }
                 }
 
@@ -62,6 +101,18 @@
                         channel.message(channelName, name,$("#message").val(), true);
                     });
                 });
+
+                $("#guessRobot").click(function () {
+                    bridge.getService('connect', function (connect) {
+                        connect.guessRobot(true, channel);
+                    });
+                });
+
+                $("#guessHuman").click(function () {
+                    bridge.getService('connect', function (connect) {
+                        connect.guessRobot(false, channel);
+                    });
+                })
 
                 var appendMessage = function (msg) {
                     console.log(myName)
@@ -83,11 +134,16 @@
 
     <body>
         <div class="container">
+            <div id="rulesDiv"></div>
             <p>
                 <strong>Message</strong>
                 <input type="text" id="message"></input>
                 <br>
                 <button class="btn btn-primary" id="submitmessage">SUBMIT</button>
+            </p>
+            <p>
+                <button class="btn btn-primary" id="guessRobot">ROBOT</button>
+                <button class="btn btn-primary" id="guessHuman">HUMAN</button>
             </p>
             <hr>
             <div id="messages"></div>
